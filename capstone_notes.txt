@@ -1,0 +1,6 @@
+ET - Evapotranspiration
+CWR - Crop Water Requirements
+NIWR - Net Irrigation water Requirements
+big leaf area model
+Penman–Monteith equation
+Leaf Area Index (LAI)
