@@ -5,6 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 %matplotlib inline
 
+
+
 coke = np.loadtxt('data/coke_weights.txt')
 
 def compute_power(n, sigma, alpha, mu0, mua):
@@ -66,3 +68,43 @@ for alpha, ax in zip(alpha_to_plot, axs.flatten()):
     fig.tight_layout()
 
     ax.legend()
+
+
+
+from regression_tools.plotting_tools import (
+    plot_univariate_smooth,
+    bootstrap_train,
+    display_coef,
+    plot_bootstrap_coefs,
+    plot_partial_depenence,
+    plot_partial_dependences,
+    predicteds_vs_actuals)
+
+fig, axs = plt.subplots(10, 1, figsize=(14, 25))
+univariate_plot_names = clean_df.columns[:-1]
+
+for name, ax in zip(univariate_plot_names, axs.flatten()):
+    plot_univariate_smooth(ax,
+                           clean_df[name].values.reshape(-1, 1),
+                           clean_df['SalesPrice'],
+                           bootstrap=100)
+    ax.set_title(name)
+fig.tight_layout()
+
+
+#Plotting Neural Networks
+def plot_results(model, ax=None, function=np.sin, xlim=(-7, 7),  data_lim=(-5, 5)):
+    x_actual = np.linspace(*xlim, 500)
+    y_actual = function(x_actual)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(12, 5))
+
+    y_pred = model.predict(x_actual)
+    ax.plot(x_actual,y_pred, 'r-', label='model predictions')
+    ax.plot(x_actual,y_actual, 'b-', lw=0.3, label='actual expected values')
+
+    ax.axvline(data_lim[0], color='k', label='limits of data')
+    ax.axvline(data_lim[1], color='k')
+    ax.set_xlim(xlim)
+    ax.legend()  
