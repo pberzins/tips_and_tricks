@@ -54,17 +54,17 @@ def plot_univariate_smooth(ax, x, y,
     if not x_lim:
         x_lim = (np.min(x), np.max(x))
     x, y = x.reshape(-1, 1), y.reshape(-1, 1)
-    
+
     ax.scatter(x, y, color='grey', alpha=0.25, label="Data")
     if smooth:
         if bootstrap:
             for _ in range(bootstrap):
                 x_boot, y_boot = resample(x, y)
-                plot_smoother(ax, x_boot, y_boot, 
-                              x_lim, n_knots, 
+                plot_smoother(ax, x_boot, y_boot,
+                              x_lim, n_knots,
                               alpha=0.5, color="lightblue",
-                              label=None)        
-        plot_smoother(ax, x, y, x_lim, n_knots, 
+                              label=None)
+        plot_smoother(ax, x, y, x_lim, n_knots,
                       linewidth=3, color="blue", label="Trend")
 
 def make_natural_cubic_regression(n_knots, knot_range=(-2, 2)):
@@ -110,7 +110,7 @@ def bootstrap_train(model, X, y, bootstraps=1000, **kwargs):
     attribute.
 
     X: A two dimensional numpy array of shape (n_observations, n_features).
-    
+
     y: A one dimensional numpy array of shape (n_observations).
 
     bootstraps: An integer, the number of boostrapped models to train.
@@ -182,17 +182,17 @@ def plot_partial_depenence(ax, model, X, var_name,
         Xpd = pipeline.transform(Xpd)
     if y is not None:
         ax.scatter(X[var_name], y, color="grey", alpha=0.5)
-    y_hat = model.predict(Xpd)
+    y_hat = model.predict_proba(Xpd)
     ax.plot(x_plot, y_hat, **kwargs)
 
-def plot_partial_dependences(model, X, var_names, 
+def plot_partial_dependences(model, X, var_names,
                             y=None, bootstrap_models=None, pipeline=None, n_points=250):
     fig, axs = plt.subplots(len(var_names), figsize=(12, 3*len(var_names)))
     for ax, name in zip(axs, var_names):
         if bootstrap_models:
             for M in bootstrap_models[:100]:
                 plot_partial_depenence(
-                    ax, M, X=X, var_name=name, pipeline=pipeline, alpha=0.8, 
+                    ax, M, X=X, var_name=name, pipeline=pipeline, alpha=0.8,
                     linewidth=1, color="lightblue")
         plot_partial_depenence(ax, model, X=X, var_name=name, y=y,
                                pipeline=pipeline, color="blue", linewidth=3)
